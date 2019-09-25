@@ -1,0 +1,65 @@
+{C:/Users/Graham/Documents/Quartus Projects/Project 1/ALTPLL_143Mhz_bb.v} {1 {vlog -work work -stats=none {C:/Users/Graham/Documents/Quartus Projects/Project 1/ALTPLL_143Mhz_bb.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module ALTPLL_143Mhz
+
+Top level modules:
+	ALTPLL_143Mhz
+
+} {} {}} {C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv} {0 {vlog -work work -sv -stats=none {C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module SDRAM_TestModule
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(27): (vlog-2110) Illegal reference to net "incrementError".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(28): (vlog-2110) Illegal reference to net "outputAddress".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(29): (vlog-2110) Illegal reference to net "outputData".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(33): (vlog-2110) Illegal reference to net "isWriting".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(34): (vlog-2110) Illegal reference to net "outputValid".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(50): (vlog-2110) Illegal reference to net "outputAddress".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(51): (vlog-2110) Illegal reference to net "outputData".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(52): (vlog-2110) Illegal reference to net "isWriting".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(53): (vlog-2110) Illegal reference to net "outputValid".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(55): (vlog-2110) Illegal reference to net "outputValid".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(69): (vlog-2110) Illegal reference to net "outputAddress".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(71): (vlog-2110) Illegal reference to net "isWriting".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(72): (vlog-2110) Illegal reference to net "outputValid".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(74): (vlog-2110) Illegal reference to net "outputValid".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(83): (vlog-2110) Illegal reference to net "incrementError".
+
+** Error: C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SDRAM_TestModule.sv(90): (vlog-2110) Illegal reference to net "incrementError".
+
+
+} {4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 17.0 18.0 19.0 20.0 21.0 22.0 23.0 24.0 25.0 26.0 27.0 28.0 29.0 30.0 31.0 32.0 33.0 34.0 35.0} {}} {C:/Users/Graham/Documents/Quartus Projects/Project 1/ALTPLL_143Mhz.v} {1 {vlog -work work -stats=none {C:/Users/Graham/Documents/Quartus Projects/Project 1/ALTPLL_143Mhz.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module ALTPLL_143Mhz
+
+Top level modules:
+	ALTPLL_143Mhz
+
+} {} {}} {C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SevenSegmentDisplayValueIndexer.sv} {1 {vlog -work work -sv -stats=none {C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SevenSegmentDisplayValueIndexer.sv}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module SevenSegmentDisplayValueIndexer
+
+Top level modules:
+	SevenSegmentDisplayValueIndexer
+
+} {} {}} {C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SevenSegmentDisplay.sv} {1 {vlog -work work -sv -stats=none {C:/Users/Graham/Documents/Quartus Projects/Project 1/Source/SevenSegmentDisplay.sv}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module SevenSegmentDisplay
+
+Top level modules:
+	SevenSegmentDisplay
+
+} {} {}}

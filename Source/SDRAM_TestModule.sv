@@ -58,14 +58,15 @@ module SDRAM_TestModule(
 					
 					//--State 1 : Write to address. Enters not busy. Wait for busy to progress.  
 					5'd1 : begin
-						outputAddress = counter[24:0]; //Fill in all 25 bits
-						outputData = 16'd256;//counter[15:0];
-						outputValue = {9'd0 , counter};
-						isWriting = 1'b1;
-						outputValid = 1'b1;
-						
 						if (isBusy == 1'b1)begin //Has reacted to our input.  Next state now
 							currentState = 5'd2;
+						end
+						else begin
+							outputAddress = counter[24:0]; //Fill in all 25 bits
+							outputData = 16'd256;//counter[15:0];
+							outputValue = {9'd0 , counter};
+							isWriting = 1'b1;
+							outputValid = 1'b1;
 						end
 					end
 			

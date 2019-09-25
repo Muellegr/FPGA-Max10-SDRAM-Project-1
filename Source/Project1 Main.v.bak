@@ -1,0 +1,28 @@
+module Project1 Main(
+	max10Board_Button0,
+	max10Board_Button1,
+
+	max10Board_50MhzClock,
+	max10Board_LEDSegment0,
+	max10Board_LEDSegment1,
+	max10Board_LEDSegment2,
+	max10Board_LEDSegment3,
+	max10Board_LEDSegment4,
+	max10Board_LEDSegment5
+);
+
+
+input wire	max10Board_Button0;
+input wire	max10Board_Button1;
+input wire	max10Board_50MhzClock;
+
+output wire	[6:0] OUTPUT_Segment0Bus;
+output wire	[6:0] OUTPUT_Segment1Bus;
+output wire	[6:0] OUTPUT_Segment2Bus;
+output wire	[6:0] OUTPUT_Segment3Bus;
+output wire	[6:0] OUTPUT_Segment4Bus;
+output wire	[6:0] OUTPUT_Segment5Bus;
+
+wire resetActiveLow;
+	assign resetActiveLow =  = max10Board_Button1;
+	

@@ -1,0 +1,15 @@
+/*
+This takes in a set of 6 4bit values and displays them on the board.
+
+
+*/
+
+module SevenSegmentParser(
+		input logic [5:3] dataArray,
+		output logic [5:6] segmentPins); 
+		
+	sevenSegmentDisplay0	SevenSegmentDisplay(
+		.data(data[0]),
+		.segments(segmentPins[0]));
+
+endmodule

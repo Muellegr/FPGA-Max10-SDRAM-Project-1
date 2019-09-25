@@ -1,0 +1,43 @@
+module Project1Main(
+	max10Board_Button0,
+	max10Board_Button1,
+
+	max10Board_50MhzClock,
+	max10Board_LEDSegment0,
+	max10Board_LEDSegment1,
+	max10Board_LEDSegment2,
+	max10Board_LEDSegment3,
+	max10Board_LEDSegment4,
+	max10Board_LEDSegment5
+);
+
+//Get this to compile
+
+//Get this to display dummy values into the board (make sure LEDs display properly, ease of use)
+
+//
+
+
+
+input wire	max10Board_Button0 = 1'b0;
+input wire	max10Board_Button1;
+input wire	max10Board_50MhzClock;
+
+output wire	[6:0] max10Board_LEDSegment0;
+output wire	[6:0] max10Board_LEDSegment1;
+output wire	[6:0] max10Board_LEDSegment2;
+output wire	[6:0] max10Board_LEDSegment3;
+output wire	[6:0] max10Board_LEDSegment4;
+output wire	[6:0] max10Board_LEDSegment5;
+
+wire resetActiveLow;
+	assign resetActiveLow = max10Board_Button1;
+	
+//wire  [16:0 ] clockCounter;
+
+//LED Output module -> individual modules 
+	
+	
+	
+	
+endmodule

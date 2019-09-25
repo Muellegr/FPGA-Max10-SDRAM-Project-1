@@ -9,6 +9,3 @@ ModelSim/work
 *.qpg
 *.qtl
 output_files
-ModelSim/Project1ModelSim.cr.mti
-*.xlsx
-*.bak
