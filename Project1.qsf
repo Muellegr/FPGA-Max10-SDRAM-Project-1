@@ -1,0 +1,294 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2018  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Intel Program License 
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 18.0.0 Build 614 04/24/2018 SJ Lite Edition
+# Date created = 12:41:32  July 29, 2019
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		Project1_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "MAX 10"
+set_global_assignment -name DEVICE 10M50DAF484C7G
+set_global_assignment -name TOP_LEVEL_ENTITY Project1Main
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.0.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:41:32  JULY 29, 2019"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.0.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+
+set_location_assignment PIN_P11 -to max10Board_50MhzClock
+set_location_assignment PIN_B8 -to max10Board_Button0
+set_location_assignment PIN_A7 -to max10Board_Button1
+
+set_location_assignment PIN_C14 -to max10Board_LEDSegments[0][0]
+set_location_assignment PIN_E15 -to max10Board_LEDSegments[0][1]
+set_location_assignment PIN_C15 -to max10Board_LEDSegments[0][2]
+set_location_assignment PIN_C16 -to max10Board_LEDSegments[0][3]
+set_location_assignment PIN_E16 -to max10Board_LEDSegments[0][4]
+set_location_assignment PIN_D17 -to max10Board_LEDSegments[0][5]
+set_location_assignment PIN_C17 -to max10Board_LEDSegments[0][6]
+                                                         
+set_location_assignment PIN_C18 -to max10Board_LEDSegments[1][0]
+set_location_assignment PIN_D18 -to max10Board_LEDSegments[1][1]
+set_location_assignment PIN_E18 -to max10Board_LEDSegments[1][2]
+set_location_assignment PIN_B16 -to max10Board_LEDSegments[1][3]
+set_location_assignment PIN_A17 -to max10Board_LEDSegments[1][4]
+set_location_assignment PIN_A18 -to max10Board_LEDSegments[1][5]
+set_location_assignment PIN_B17 -to max10Board_LEDSegments[1][6]
+                                                         
+set_location_assignment PIN_B20 -to max10Board_LEDSegments[2][0]
+set_location_assignment PIN_A20 -to max10Board_LEDSegments[2][1]
+set_location_assignment PIN_B19 -to max10Board_LEDSegments[2][2]
+set_location_assignment PIN_A21 -to max10Board_LEDSegments[2][3]
+set_location_assignment PIN_B21 -to max10Board_LEDSegments[2][4]
+set_location_assignment PIN_C22 -to max10Board_LEDSegments[2][5]
+set_location_assignment PIN_B22 -to max10Board_LEDSegments[2][6]
+                                                         
+set_location_assignment PIN_F21 -to max10Board_LEDSegments[3][0]
+set_location_assignment PIN_E22 -to max10Board_LEDSegments[3][1]
+set_location_assignment PIN_E21 -to max10Board_LEDSegments[3][2]
+set_location_assignment PIN_C19 -to max10Board_LEDSegments[3][3]
+set_location_assignment PIN_C20 -to max10Board_LEDSegments[3][4]
+set_location_assignment PIN_D19 -to max10Board_LEDSegments[3][5]
+set_location_assignment PIN_E17 -to max10Board_LEDSegments[3][6]
+                                                         
+set_location_assignment PIN_F18 -to max10Board_LEDSegments[4][0]
+set_location_assignment PIN_E20 -to max10Board_LEDSegments[4][1]
+set_location_assignment PIN_E19 -to max10Board_LEDSegments[4][2]
+set_location_assignment PIN_J18 -to max10Board_LEDSegments[4][3]
+set_location_assignment PIN_H19 -to max10Board_LEDSegments[4][4]
+set_location_assignment PIN_F19 -to max10Board_LEDSegments[4][5]
+set_location_assignment PIN_F20 -to max10Board_LEDSegments[4][6]
+                                                         
+set_location_assignment PIN_J20 -to max10Board_LEDSegments[5][0]
+set_location_assignment PIN_K20 -to max10Board_LEDSegments[5][1]
+set_location_assignment PIN_L18 -to max10Board_LEDSegments[5][2]
+set_location_assignment PIN_N18 -to max10Board_LEDSegments[5][3]
+set_location_assignment PIN_M20 -to max10Board_LEDSegments[5][4]
+set_location_assignment PIN_N19 -to max10Board_LEDSegments[5][5]
+set_location_assignment PIN_N20 -to max10Board_LEDSegments[5][6]
+
+
+set_location_assignment PIN_C10 -to max10board_switches[0]
+set_location_assignment PIN_C11 -to max10board_switches[1]
+set_location_assignment PIN_D12 -to max10board_switches[2]
+set_location_assignment PIN_C12 -to max10board_switches[3]
+set_location_assignment PIN_A12 -to max10board_switches[4]
+set_location_assignment PIN_B12 -to max10board_switches[5]
+set_location_assignment PIN_A13 -to max10board_switches[6]
+set_location_assignment PIN_A14 -to max10board_switches[7]
+set_location_assignment PIN_B14 -to max10board_switches[8]
+set_location_assignment PIN_F15 -to max10board_switches[9]
+
+set_location_assignment PIN_A8 -to max10Board_LEDs[0]
+set_location_assignment PIN_A9 -to max10Board_LEDs[1]
+set_location_assignment PIN_A10 -to max10Board_LEDs[2]
+set_location_assignment PIN_B10 -to max10Board_LEDs[3]
+set_location_assignment PIN_D13 -to max10Board_LEDs[4]
+set_location_assignment PIN_C13 -to max10Board_LEDs[5]
+set_location_assignment PIN_E14 -to max10Board_LEDs[6]
+set_location_assignment PIN_D14 -to max10Board_LEDs[7]
+set_location_assignment PIN_A11 -to max10Board_LEDs[8]
+set_location_assignment PIN_B11 -to max10Board_LEDs[9]
+
+set_location_assignment PIN_L14 -to max10Board_SDRAM_Clock
+set_location_assignment PIN_N22 -to max10Board_SDRAM_ClockEnable
+set_location_assignment PIN_V22 -to max10Board_SDRAM_DataMask0
+set_location_assignment PIN_J21 -to max10Board_SDRAM_DataMask1
+set_location_assignment PIN_U20 -to max10Board_SDRAM_ChipSelect_n
+set_location_assignment PIN_V20 -to max10Board_SDRAM_WriteEnable_n
+set_location_assignment PIN_U21 -to max10Board_SDRAM_ColumnAddressStrobe_n
+set_location_assignment PIN_U22 -to max10Board_SDRAM_RowAddressStrobe_n
+
+set_location_assignment PIN_U17 -to max10Board_SDRAM_Address[0]
+set_location_assignment PIN_W19 -to max10Board_SDRAM_Address[1]
+set_location_assignment PIN_V18 -to max10Board_SDRAM_Address[2]
+set_location_assignment PIN_U18 -to max10Board_SDRAM_Address[3]
+set_location_assignment PIN_U19 -to max10Board_SDRAM_Address[4]
+set_location_assignment PIN_T18 -to max10Board_SDRAM_Address[5]
+set_location_assignment PIN_T19 -to max10Board_SDRAM_Address[6]
+set_location_assignment PIN_R18 -to max10Board_SDRAM_Address[7]
+set_location_assignment PIN_P18 -to max10Board_SDRAM_Address[8]
+set_location_assignment PIN_P19 -to max10Board_SDRAM_Address[9]
+set_location_assignment PIN_T20 -to max10Board_SDRAM_Address[10]
+set_location_assignment PIN_P20 -to max10Board_SDRAM_Address[11]
+set_location_assignment PIN_R20 -to max10Board_SDRAM_Address[12]
+
+set_location_assignment PIN_T21 -to max10Board_SDRAM_BankAddress[0]
+set_location_assignment PIN_T22 -to max10Board_SDRAM_BankAddress[1]
+
+set_location_assignment PIN_Y21 -to max10Board_SDRAM_Data[0]
+set_location_assignment PIN_Y20 -to max10Board_SDRAM_Data[1]
+set_location_assignment PIN_AA22 -to max10Board_SDRAM_Data[2]
+set_location_assignment PIN_AA21 -to max10Board_SDRAM_Data[3]
+set_location_assignment PIN_Y22 -to max10Board_SDRAM_Data[4]
+set_location_assignment PIN_W22 -to max10Board_SDRAM_Data[5]
+set_location_assignment PIN_W20 -to max10Board_SDRAM_Data[6]
+set_location_assignment PIN_V21 -to max10Board_SDRAM_Data[7]
+set_location_assignment PIN_P21 -to max10Board_SDRAM_Data[8]
+set_location_assignment PIN_J22 -to max10Board_SDRAM_Data[9]
+set_location_assignment PIN_H21 -to max10Board_SDRAM_Data[10]
+set_location_assignment PIN_H22 -to max10Board_SDRAM_Data[11]
+set_location_assignment PIN_G22 -to max10Board_SDRAM_Data[12]
+set_location_assignment PIN_G20 -to max10Board_SDRAM_Data[13]
+set_location_assignment PIN_G19 -to max10Board_SDRAM_Data[14]
+set_location_assignment PIN_F22 -to max10Board_SDRAM_Data[15]
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_50MhzClock
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_Button0
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_Button1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0][6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1][6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2][6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3][6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4][6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5][6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDSegments[5]
+set_global_assignment -name SEARCH_PATH source
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[12]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[11]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[10]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Address[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_BankAddress[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_BankAddress[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_ChipSelect_n
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Clock
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_ClockEnable
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_ColumnAddressStrobe_n
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[15]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[14]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[13]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[12]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[11]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[10]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_Data[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_DataMask0
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_DataMask1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_RowAddressStrobe_n
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_SDRAM_WriteEnable_n
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10Board_LEDs[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to max10board_switches[0]
+set_global_assignment -name SYSTEMVERILOG_FILE Source/SDRAM_TestModule.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Source/ClockGeneratorTest.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Source/Max10_SDRam.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Source/SevenSegmentDisplayValueIndexer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Source/SevenSegmentParser.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Source/SevenSegmentDisplay.sv
+set_global_assignment -name SYSTEMVERILOG_FILE Source/Project1Main.sv
+set_global_assignment -name QIP_FILE ALTPLL_143Mhz.qip
+set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2005
+set_global_assignment -name VERILOG_SHOW_LMF_MAPPING_MESSAGES OFF
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

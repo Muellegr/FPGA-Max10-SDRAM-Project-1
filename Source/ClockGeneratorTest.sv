@@ -1,0 +1,14 @@
+module ClockGeneratorTest(
+		input wire inputClock,
+		output wire outputClock); 
+
+		always@(posedge inputClock)
+			begin
+				outputClock <= 1'b1;
+				//50Mhz is 20ns.  It is on for 10ns, off for 10ns
+				//100Mhz is 10ns.  It is on for 5 ns, off for 5ns.
+				#5ns outputClock <= 1'b0;
+				#5ns outputClock <= 1'b1;
+				#5ns outputClock <= 1'b0;
+			end
+endmodule

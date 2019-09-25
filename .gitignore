@@ -1,0 +1,14 @@
+
+db
+Backups
+incremental_db
+ModelSim/transcript
+*.wlf
+ModelSim/work
+*.qdb
+*.qpg
+*.qtl
+output_files
+ModelSim/Project1ModelSim.cr.mti
+*.xlsx
+*.bak
