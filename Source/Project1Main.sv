@@ -69,8 +69,12 @@ module Project1Main(
 	reg [50:0][15:0] sdram_TestInputData;
 	reg [50:0][15:0] sdram_TestOutputData;
 	
-	reg [50:0][15:0] sdram_DataOutputState;
+	reg [25:0][9:0][15:0] sdram_DataOutputState;
 	reg [8:0]		 sdram_DataOutputCounter;
+	
+	reg [15:0] sdram_inputData;
+	reg 	   sdram_isWriting ;
+	reg		   sdram_inputValid ;
 	always@(posedge clock143Mhz)begin
 		max10Board_LEDs[8] = 1'b0;
 		if (reset_n == 1'b0) begin
@@ -80,6 +84,10 @@ module Project1Main(
 			
 			sdram_testAddressCounter = 25'd0;
 			sdram_DataOutputCounter = 9'd0;
+			
+			sdram_inputData = 16'd0;
+			sdram_isWriting = 1'd0;
+			sdram_inputValid = 1'd0;
 		end
 		if (reset_n == 1'b1) begin
 			case(sdram_startupLoadState)
@@ -116,21 +124,29 @@ module Project1Main(
 				//-----WRITING HERE
 				//Start write command.  Is not busy.  Waits until we get a busy signal.
 				6'd4: begin
-					if (sdram_DataOutputCounter < 9'd50) begin
-						//sdram_DataOutputState[sdram_DataOutputCounter] = {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n };
-						sdram_DataOutputState[sdram_DataOutputCounter] = max10Board_SDRAM_Data;
-						sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
-					end
+					  // if (sdram_DataOutputCounter != 9'd25) begin
+						// sdram_DataOutputState[sdram_DataOutputCounter][0] = sdram_testAddressCounter;
+						// sdram_DataOutputState[sdram_DataOutputCounter][1] = sdram_TestInputData[sdram_testAddressCounter];
+						// sdram_DataOutputState[sdram_DataOutputCounter][2] = max10Board_SDRAM_Data;
+						// sdram_DataOutputState[sdram_DataOutputCounter][3] = {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n };
+						// sdram_DataOutputState[sdram_DataOutputCounter][4] = isLoading ;
+						// sdram_DataOutputState[sdram_DataOutputCounter][5] = sdram_outputData;
+						// sdram_DataOutputState[sdram_DataOutputCounter][6] = sdram_outputValid;
+						// sdram_DataOutputState[sdram_DataOutputCounter][7] = sdram_isBusy;
+						// sdram_DataOutputState[sdram_DataOutputCounter][8] = sdram_recievedCommand;
+						// sdram_DataOutputState[sdram_DataOutputCounter][9] = sdram_inputAddress;
+						// sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
+					// end
 				
 					if (sdram_recievedCommand == 1'b1)begin //Has reacted to our input.  Next state now
 						sdram_startupLoadState = 6'd5;
 					end
 					else begin
 						sdram_TestAddress[sdram_testAddressCounter] = sdram_testAddressCounter ;
-						sdram_TestInputData[sdram_testAddressCounter] = 16'd512;//(sdram_testAddressCounter+15'd1)*15'd1000;
+						sdram_TestInputData[sdram_testAddressCounter] =  16'd100 + sdram_testAddressCounter[15:0];//(sdram_testAddressCounter+15'd1)*15'd1000;
 						
 						sdram_inputAddress = sdram_testAddressCounter;
-						sdram_inputData =16'd512;
+						sdram_inputData =  16'd100 + sdram_testAddressCounter[15:0];
 						sdram_isWriting = 1'b1;
 						sdram_inputValid = 1'b1;
 					end
@@ -138,15 +154,24 @@ module Project1Main(
 				
 				//Wait for write to complete
 				6'd5: begin 
-					if (sdram_DataOutputCounter < 9'd50) begin
-						sdram_DataOutputState[sdram_DataOutputCounter] = max10Board_SDRAM_Data;
-						sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
-					end
+					  // if (sdram_DataOutputCounter != 9'd25) begin
+						// sdram_DataOutputState[sdram_DataOutputCounter][0] = sdram_testAddressCounter;
+						// sdram_DataOutputState[sdram_DataOutputCounter][1] = sdram_TestInputData[sdram_testAddressCounter];
+						// sdram_DataOutputState[sdram_DataOutputCounter][2] = max10Board_SDRAM_Data;
+						// sdram_DataOutputState[sdram_DataOutputCounter][3] = {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n };
+						// sdram_DataOutputState[sdram_DataOutputCounter][4] = isLoading ;
+						// sdram_DataOutputState[sdram_DataOutputCounter][5] = sdram_outputData;
+						// sdram_DataOutputState[sdram_DataOutputCounter][6] = sdram_outputValid;
+						// sdram_DataOutputState[sdram_DataOutputCounter][7] = sdram_isBusy;
+						// sdram_DataOutputState[sdram_DataOutputCounter][8] = sdram_recievedCommand;
+						// sdram_DataOutputState[sdram_DataOutputCounter][9] = sdram_inputAddress;
+						// sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
+					// end
 					//Entered busy, so when not busy...
 					if (sdram_isBusy == 1'b0)begin
 						sdram_testAddressCounter = sdram_testAddressCounter + 1'd1;
 						//If at limit, proceed to next state
-						if (sdram_testAddressCounter >= 25'd10 )begin
+						if (sdram_testAddressCounter == 25'd10 )begin
 							sdram_startupLoadState = 6'd6;
 							sdram_testAddressCounter = 25'd0;
 						end
@@ -157,7 +182,7 @@ module Project1Main(
 					end
 					else begin
 						sdram_inputAddress = 25'd0;
-						sdram_inputData = 16'd0;
+					//	sdram_inputData = 16'd0;
 						sdram_inputValid = 1'b0;
 					end
 				end
@@ -181,13 +206,27 @@ module Project1Main(
 				// //------------------------
 				// //Start read commands.  
 				6'd7: begin 
+					// if (sdram_DataOutputCounter != 9'd25) begin
+						// sdram_DataOutputState[sdram_DataOutputCounter][0] = sdram_testAddressCounter;
+						// sdram_DataOutputState[sdram_DataOutputCounter][1] = sdram_TestInputData[sdram_testAddressCounter];
+						// sdram_DataOutputState[sdram_DataOutputCounter][2] = max10Board_SDRAM_Data;
+						// sdram_DataOutputState[sdram_DataOutputCounter][3] = {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n };
+						// sdram_DataOutputState[sdram_DataOutputCounter][4] = isLoading ;
+						// sdram_DataOutputState[sdram_DataOutputCounter][5] = sdram_outputData;
+						// sdram_DataOutputState[sdram_DataOutputCounter][6] = sdram_outputValid;
+						// sdram_DataOutputState[sdram_DataOutputCounter][7] = sdram_isBusy;
+						// sdram_DataOutputState[sdram_DataOutputCounter][8] = sdram_recievedCommand;
+						// sdram_DataOutputState[sdram_DataOutputCounter][9] = sdram_inputAddress;
+						// sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
+					// end
+					
 					if (sdram_recievedCommand == 1'b1)begin //Has reacted to our input.  Next state now
 						sdram_startupLoadState <= 6'd8;
 					end
 					else begin
 						
 						sdram_inputAddress = sdram_TestAddress[sdram_testAddressCounter];
-						sdram_TestOutputData[sdram_testAddressCounter] = 16'd5;
+						//sdram_TestOutputData[sdram_testAddressCounter] = sdram_outputData;//16'd5;
 						sdram_isWriting = 1'b0;
 						sdram_inputValid <= 1'b1;
 						// if (dataLineStoreCounter < 60) begin
@@ -201,12 +240,29 @@ module Project1Main(
 				
 				// //Wait until the data is valid and store it.  Also enable us to exit.
 				6'd8: begin 
-					 
+					 // if (sdram_DataOutputCounter != 9'd25) begin
+						// sdram_DataOutputState[sdram_DataOutputCounter][0] = sdram_testAddressCounter;
+						// sdram_DataOutputState[sdram_DataOutputCounter][1] = sdram_TestInputData[sdram_testAddressCounter];
+						// sdram_DataOutputState[sdram_DataOutputCounter][2] = max10Board_SDRAM_Data;
+						// sdram_DataOutputState[sdram_DataOutputCounter][3] = {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n };
+						// sdram_DataOutputState[sdram_DataOutputCounter][4] = isLoading ;
+						// sdram_DataOutputState[sdram_DataOutputCounter][5] = sdram_outputData;
+						// sdram_DataOutputState[sdram_DataOutputCounter][6] = sdram_outputValid;
+						// sdram_DataOutputState[sdram_DataOutputCounter][7] = sdram_isBusy;
+						// sdram_DataOutputState[sdram_DataOutputCounter][8] = sdram_recievedCommand;
+						// sdram_DataOutputState[sdram_DataOutputCounter][9] = sdram_inputAddress;
+						// sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
+					// end
+					
+					sdram_inputValid <= 1'b0;
+					if (sdram_outputValid == 1'b1) begin //Data is good to record
+							sdram_TestOutputData[sdram_testAddressCounter] = sdram_outputData;// + 1 ;
+					end
 					
 					if (sdram_isBusy == 1'b0)begin //Has finished reading command
 						sdram_testAddressCounter = sdram_testAddressCounter + 1'b1;
 						//Have we completed all of these?
-						if (sdram_testAddressCounter >= 6'd10 )begin
+						if (sdram_testAddressCounter == 6'd10 )begin
 							sdram_startupLoadState = 6'd9;
 						end
 						//If not at the end, return to reading more
@@ -214,126 +270,64 @@ module Project1Main(
 							sdram_startupLoadState <= 6'd7;
 						end
 					end
-					else begin
-						
-						sdram_inputValid <= 1'b0;
-						if (sdram_outputValid == 1'b1) begin //Data is good to record
-							sdram_TestOutputData[sdram_testAddressCounter] = sdram_outputData;// + 1 ;
-						end
-					end
+	
 					
 				end
 				// //--Final state.  
 				6'd9: begin 
-				// //	max10Board_LEDs[0] <= 1'b0;
-					// //dataLineStoreCounter = 16'd0;
-					// /*
-					
-				// reg [10:0][16:0] dataLineStore; //Stores data
-				// reg [5:0] dataLineStoreCounter = 5'd0;
-					// */
-					
-					// // if (max10board_switches[0] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[0];  end
-						// // else begin segmentDisplayValue = dataLineStore[10];  end
-						
-					// // end
-					// // else if (max10board_switches[1] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[1];  end
-						// // else begin segmentDisplayValue = dataLineStore[11];  end
-					// // end
-					
-					// // else if (max10board_switches[2] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[2];  end
-						// // else begin segmentDisplayValue = dataLineStore[12];  end
-					// // end
-					
-					// // else if (max10board_switches[3] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[3];  end
-						// // else begin segmentDisplayValue = dataLineStore[13];  end
-					// // end
-					
-					// // else if (max10board_switches[4] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[4];  end
-						// // else begin segmentDisplayValue = dataLineStore[14];  end
-					// // end
-					
-					// // else if (max10board_switches[5] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[5];  end
-						// // else begin segmentDisplayValue = dataLineStore[15];  end
-					// // end
-					
-					// // else if (max10board_switches[6] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[6];  end
-						// // else begin segmentDisplayValue = dataLineStore[16];  end
-					// // end
-					
-					// // else if (max10board_switches[7] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[7];  end
-						// // else begin segmentDisplayValue = dataLineStore[17];  end
-					// // end
-					
-					// // else if (max10board_switches[8] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[8];  end
-						// // else begin segmentDisplayValue = dataLineStore[18];  end
-					// // end
-					// // else if (max10board_switches[9] == 1'b1 ) begin
-						// // if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = dataLineStore[9];  end
-						// // else begin segmentDisplayValue = dataLineStore[19];  end
-					// // end
-					
 					//Uses switches and key0 to compare input//output
 					
-					// if (max10board_switches[0] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[0]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[0]; end
-					// end
-					// else if (max10board_switches[1] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[1]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[1]; end
-					// end
+					if (max10board_switches[0] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[0]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[0]; end
+					end
+					else if (max10board_switches[1] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[1]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[1]; end
+					end
 					
-					// else if (max10board_switches[2] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[2]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[2]; end
-					// end
+					else if (max10board_switches[2] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[2]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[2]; end
+					end
 					
-					// else if (max10board_switches[3] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[3]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[3]; end
-					// end
+					else if (max10board_switches[3] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[3]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[3]; end
+					end
 					
-					// else if (max10board_switches[4] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[4]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[4]; end
-					// end
+					else if (max10board_switches[4] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[4]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[4]; end
+					end
 					
-					// else if (max10board_switches[5] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[5]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[5]; end
-					// end
+					else if (max10board_switches[5] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[5]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[5]; end
+					end
 					
-					// else if (max10board_switches[6] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[6]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[6]; end
-					// end
+					else if (max10board_switches[6] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[6]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[6]; end
+					end
 					
-					// else if (max10board_switches[7] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[7]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[7]; end
-					// end
+					else if (max10board_switches[7] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[7]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[7]; end
+					end
 					
-					// else if (max10board_switches[8] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[8]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[8]; end
-					// end
-					// else if (max10board_switches[9] == 1'b1 ) begin
-						// if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[9]; end
-						// else begin segmentDisplayValue = sdram_TestOutputData[9]; end
-					// end 
-					// else begin
-						// segmentDisplayValue = 41'd191919;
-					// end;
+					else if (max10board_switches[8] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[8]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[8]; end
+					end
+					else if (max10board_switches[9] == 1'b1 ) begin
+						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[9]; end
+						else begin segmentDisplayValue = sdram_TestOutputData[9]; end
+					end 
+					else begin
+						segmentDisplayValue = 41'd191919;
+					end;
+					
 				end
 				
 				
@@ -350,20 +344,84 @@ module Project1Main(
 	end
 	
 	reg [8:0] displayCounter ;
+	/*
+	if (sdram_DataOutputCounter < 9'd50) begin
+						sdram_DataOutputState[sdram_DataOutputCounter][0] = sdram_testAddressCounter;
+						sdram_DataOutputState[sdram_DataOutputCounter][1] = sdram_TestInputData[sdram_testAddressCounter];
+						sdram_DataOutputState[sdram_DataOutputCounter][2] = max10Board_SDRAM_Data;
+						sdram_DataOutputState[sdram_DataOutputCounter][3] = {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n };
+						sdram_DataOutputState[sdram_DataOutputCounter][4] = isLoading ;
+						sdram_DataOutputState[sdram_DataOutputCounter][5] = sdram_outputData;
+						sdram_DataOutputState[sdram_DataOutputCounter][6] = sdram_outputValid;
+						sdram_DataOutputState[sdram_DataOutputCounter][7] = sdram_isBusy;
+						sdram_DataOutputState[sdram_DataOutputCounter][8] = sdram_recievedCommand;
+						sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
+	end
+	*/
+	
 	
 	always@(posedge max10Board_Button0) begin
 		if (reset_n == 1'b0) begin
 			displayCounter = 9'd0;
 		end
 		else begin
-			if (displayCounter >= 9'd50) begin displayCounter = 9'd0; end
+			if (displayCounter == 9'd24) begin displayCounter = 9'd0; end
 			else begin
 				displayCounter = displayCounter + 1'b1;
 			end
 		end
-		segmentDisplayValue = sdram_DataOutputState[displayCounter] + displayCounter*1000;
 	end
-	 
+	
+	/*
+	//reg switchCounter
+	always@(posedge clock143Mhz) begin
+		case(max10board_switches) 
+			10'b0_000_000_001 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][0] ;//+ displayCounter*10000 ;
+			end
+			10'b0_000_000_010 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][1] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_000_000_100 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][2] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_000_001_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][3] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_000_010_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][4] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_000_100_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][5] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_001_000_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][6] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_010_000_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][7] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b0_100_000_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][8] ;//+ displayCounter*10000 ;
+			end
+			
+			10'b1_000_000_000 : begin
+				segmentDisplayValue = sdram_DataOutputState[displayCounter][9] ;//+ displayCounter*10000 ;
+			end
+			default : begin
+				segmentDisplayValue = displayCounter;
+			end
+			
+			
+		endcase
+	end
+	*/
 	reg sdRamTest_CompareError ;
 	reg sdRamTest_CompletedSuccess ;
 	 
@@ -397,6 +455,7 @@ module Project1Main(
 	);*/
 	
 	//--The main SDRAM controller.  The interface is how it is controlled.  
+	//wire [15:0] debugOutputData ;
 	Max10_SDRam sdramController (
 		//Max10 SD RAM physical inputs/outputs
 		.max10Board_SDRAM_Clock(max10Board_SDRAM_Clock),
@@ -422,6 +481,8 @@ module Project1Main(
 		.reset_n(reset_n),
 		.isBusy(sdram_isBusy),
 		.recievedCommand(sdram_recievedCommand)
+		
+		//.debugOutputData(debugOutputData)
 	);
 
 	//--Clock Generator - Takes a 50Mhz clock and outputs a 143Mhz clock.	 
@@ -437,8 +498,8 @@ module Project1Main(
 	//SegmentDisplayValue is a regular integer up to 999999 that is displayed on 6 hex displays.
 	SevenSegmentParser sevenSegmentParser(
 		.dataArray(segmentDisplayValue),
-		.clock_50Mhz(max10Board_50MhzClock),
-		.reset_n(reset_n),
+		//.clock_50Mhz(max10Board_50MhzClock),
+		//.reset_n(reset_n),
 		.segmentPins(max10Board_LEDSegments)
 	);
 	

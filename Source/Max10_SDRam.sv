@@ -27,8 +27,10 @@ module Max10_SDRam(
 	output wire [15:0] outputData, //Data that has been read from the address
 	output reg outputValid, //Pulsed high when output is valid.  Ready for new command.
 	output wire isBusy, //Controller is busy when this is high.  Ignores inputValid and outputValid during this.
-	output reg recievedCommand //Used to indicate if a command was recieved
+	output reg recievedCommand, //Used to indicate if a command was recieved
+	output wire [15:0] debugOutputData
 	);
+	assign debugOutputData = isBusy ? inputData : 16'd0;
 	
 	wire isBusy_AutoRefresh ;  //Does an autorefresh need to occur
 	reg isBusy_Command; //is it busy due to a current command
@@ -82,7 +84,8 @@ module Max10_SDRam(
 	assign max10Board_SDRAM_ClockEnable = 1'b1;
 	assign max10Board_SDRAM_Clock = activeClock;
 	
-	assign outputData = outputValid ? max10Board_SDRAM_Data : 16'hZZZZ;
+	assign outputData = max10Board_SDRAM_Data;
+	//assign outputData = outputValid ? max10Board_SDRAM_Data : 16'hZZZZ;
 	//assign outputData =  inputValid ;
 	
 	//--------------------------------------------------------------
@@ -128,7 +131,7 @@ module Max10_SDRam(
 				recievedCommand = 1'b0;
 				max10Board_SDRAM_Address = 13'd0;
 				max10Board_SDRAM_BankAddress = 2'd0;
-				max10Board_SDRAM_Data = 16'd10;
+				max10Board_SDRAM_Data	 = 16'hZZZZ;
 				isBusy_Command = 1'b1;
 				outputValid = 1'b0;
 				pauseCycles = 17'd0;
@@ -144,7 +147,7 @@ module Max10_SDRam(
 					currentCommand = CMD_NOP;
 						max10Board_SDRAM_Address 	 = 13'b0_000_000_000_000;
 						max10Board_SDRAM_BankAddress = 2'b00;
-						max10Board_SDRAM_Data        = 16'd100;
+						max10Board_SDRAM_Data	 = 16'hZZZZ;
 
 					isBusy_Command = 1'b1;
 					outputValid = 1'b0;
@@ -155,7 +158,7 @@ module Max10_SDRam(
 				//--------------------------
 				INIT_STARTUPWAIT: begin //1
 					//Wait for 200ms
-					if (pauseCycles < 17'd28600) begin 
+					if (pauseCycles != 17'd28600) begin 
 						currentCommand = CMD_NOP;
 						pauseCycles = pauseCycles + 1'd1;
 					end
@@ -170,7 +173,7 @@ module Max10_SDRam(
 
 				//--------------------------
 				INIT_PRECHARGE: begin //2
-					if (pauseCycles < 3) begin //Wait for tRP (15ns)
+					if (pauseCycles != 3) begin //Wait for tRP (15ns)
 						currentCommand = CMD_NOP; 
 						pauseCycles = pauseCycles + 1'd1;
 					end
@@ -184,7 +187,9 @@ module Max10_SDRam(
 				
 				//--------------------------
 				INIT_AUTOREFRESH: begin //3
-					if (pauseCycles >= 17'd72) begin //8 autorefresh cycles which take 9 clocks each
+				
+					
+					if (pauseCycles == 17'd72) begin //8 autorefresh cycles which take 9 clocks each
 						currentState <= INIT_LOADMODE;
 						pauseCycles = 17'd0; //Loadmode takes 2 cycles, but we use 4 as it's recommended
 						
@@ -198,20 +203,35 @@ module Max10_SDRam(
 											//A2-A0 : Burst Length // 000
 					end
 					else begin
-						if (pauseCycles % 17'd9 == 17'd8 && pauseCycles != 17'd0) begin 
-							currentCommand = CMD_CBR_AUTOREFRESH;
-							pauseCycles = pauseCycles + 1'b1;
-						end
-						else begin
+						//REMOVE MODULO HERE, HARDCODE INTEGERS INSTEAD (two counters?)
+						//Need 8x autorefresh cycles.  Each cycles requires 63ns (9 clock periods) to be good. 
+							//0 (give command)
+							//1  0 COMMAND
+							//2  1
+							//3  2
+							//4  3
+							//5  4
+							//6  5
+							//7  6
+							//8  7
+							//9   8(give command)
+							//10   9COMMAND
+						if (pauseCycles == 0 || pauseCycles == 9 || pauseCycles == 18 || pauseCycles == 27 || pauseCycles == 36 || pauseCycles == 45
+						||pauseCycles == 54 || pauseCycles == 63 )begin
+								currentCommand = CMD_CBR_AUTOREFRESH;
+								pauseCycles = pauseCycles + 1'b1;
+						  end
+						  else begin
 							currentCommand = CMD_NOP;
 							pauseCycles = pauseCycles + 1'b1;
-						end
+						  end
+						
 					end
 				end
 
 				//--------------------------
 				INIT_LOADMODE: begin //4
-					if (pauseCycles >= 17'd3) begin
+					if (pauseCycles == 17'd3) begin
 						currentState <= IDLE;
 						isBusy_Command = 1'b0; 
 						pauseCycles = 17'd0; 
@@ -232,7 +252,7 @@ module Max10_SDRam(
 						currentCommand = CMD_BANKACTIVATE;
 						max10Board_SDRAM_Address 	 =  address[22:10] ; //Get the 13 values for the ROW.
 						max10Board_SDRAM_BankAddress = address[24:23] ; //BANK
-						max10Board_SDRAM_Data	 = 16'd600;
+						max10Board_SDRAM_Data	 = 16'hZZZZ;
 						isBusy_Command = 1'b1; 
 						pauseCycles = 17'd0;
 						recievedCommand = 1'd1;
@@ -256,7 +276,7 @@ module Max10_SDRam(
 						currentCommand = CMD_NOP;
 						max10Board_SDRAM_Address 	 =  13'b0_000_000_000_000 ;
 						max10Board_SDRAM_BankAddress =  2'b00 ;
-						max10Board_SDRAM_Data        = 16'd500; 
+						max10Board_SDRAM_Data	 = 16'hZZZZ;
 
 						outputValid = 1'b0;
 					
@@ -269,7 +289,7 @@ module Max10_SDRam(
 				
 				//--------------------------
 				AUTOFRESH_ALL: begin //6
-					if (pauseCycles >= 17'd9) begin
+					if (pauseCycles == 17'd9) begin
 						currentState <= IDLE;
 						autorefreshCounter = 11'd0;
 						pauseCycles = 17'd0; 
@@ -282,7 +302,7 @@ module Max10_SDRam(
 				
 				//--------------------------
 				READ_ROWACTIVATE: begin //7
-					if (pauseCycles >= 17'd3) begin //Reached end of row activation, continue to read action.
+					if (pauseCycles == 17'd2) begin //Reached end of row activation, continue to read action.
 						currentState <= READ_ACTION;
 
 						currentCommand = CMD_READ;
@@ -298,7 +318,7 @@ module Max10_SDRam(
 				
 				//--------------------------
 				READ_ACTION: begin //8
-					if (pauseCycles == 17'd3) begin
+					if (pauseCycles == 17'd2) begin
 						currentState <= READ_PRECHARGE;
 						pauseCycles = 17'd0; 
 						currentCommand = CMD_PRECHARGE_SELECTBANK;
@@ -320,7 +340,7 @@ module Max10_SDRam(
 						pauseCycles = pauseCycles + 1'd1;
 						currentCommand = CMD_NOP;
 					end
-					else if (pauseCycles >= 17'd2) begin 
+					else if (pauseCycles == 17'd2) begin 
 						currentState <= IDLE;
 						pauseCycles = 17'd0; 
 					end
@@ -333,7 +353,7 @@ module Max10_SDRam(
 				
 				//--------------------------
 				WRITE_ROWACTIVATE: begin //11
-					if (pauseCycles >= 17'd3) begin //Reached end of row activation, continue to read action.
+					if (pauseCycles == 17'd2) begin //Reached end of row activation, continue to read action.
 						currentState <= WRITE_ACTION;
 						pauseCycles = 17'd0; 
 						currentCommand = CMD_WRITE;
@@ -349,12 +369,12 @@ module Max10_SDRam(
 				
 				//--------------------------
 				WRITE_ACTION: begin //12
-					if (pauseCycles >= 17'd3) begin //Reached end of row activation, continue to read action.
+					if (pauseCycles == 17'd2) begin //Reached end of row activation, continue to read action.
 						currentState <= WRITE_PRECHARGE;
 						pauseCycles = 17'd0; 
 						currentCommand = CMD_PRECHARGE_SELECTBANK;
 						max10Board_SDRAM_Address = {2'b0, 1'b0 , 10'd0 };  //A10 is low for single bank
-						//max10Board_SDRAM_Data = 16'hZZZZ; 
+						max10Board_SDRAM_Data = 16'hZZZZ; 
 					end
 					else begin
 						currentCommand = CMD_NOP;
@@ -364,7 +384,7 @@ module Max10_SDRam(
 	
 				//--------------------------				
 				WRITE_PRECHARGE: begin //13
-					if (pauseCycles >= 17'd3) begin 
+					if (pauseCycles == 17'd2) begin 
 						currentState <= IDLE;
 						pauseCycles = 17'd0; 
 					end

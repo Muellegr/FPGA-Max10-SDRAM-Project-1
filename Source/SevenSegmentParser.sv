@@ -6,8 +6,8 @@ This takes in a set of 6 4bit values and displays them on the board.
 
 module SevenSegmentParser(
 		input logic [40:0] dataArray,
-		input wire clock_50Mhz,
-		input wire reset_n,
+		//input wire clock_50Mhz,
+		//input wire reset_n,
 		output logic [5:0][6:0] segmentPins); 
 		
 	reg [40:0] displayValue;
@@ -21,7 +21,7 @@ module SevenSegmentParser(
 	reg [4:0] displayIndexMaxOffset; //What digit place has the last significant value.
 									 //Because this displays 6 numbers naturally, this value is subtracted by 6.  
 	
-	
+	/*
 	always @(posedge clock_50Mhz)begin
 		 if (displayUpdateCount <24'd5000000 ) displayUpdateCount++;
 		
@@ -125,7 +125,7 @@ module SevenSegmentParser(
 		endcase
 		end
 	end
-	
+	*/
 	
 	//`include "SevenSegmentDisplayValueIndexValue.sv"
 
@@ -187,7 +187,7 @@ module SevenSegmentParser(
 				5: begin
 					SevenSegmentDisplayValueIndexValue = (data / (100000 ) ) % 10;
 				end
-				
+				/*
 				6: begin
 				//	SevenSegmentDisplayValueIndexValue = (data / (1000000 ) ) % 10;
 				end
@@ -211,7 +211,7 @@ module SevenSegmentParser(
 				11: begin
 				//	SevenSegmentDisplayValueIndexValue = (data / (100000000000 ) ) % 10;
 				end
-				
+				*/
 				default:begin
 					SevenSegmentDisplayValueIndexValue = (data / (1) ) % 10;
 				end
