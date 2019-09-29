@@ -37,8 +37,8 @@ module Max10_SDRam(
 	  
 	assign isBusy = isBusy_AutoRefresh || isBusy_Command;
 	reg [10:0] autorefreshCounter ; //Counts to 1050 and sets isBusy high
-	assign isBusy_AutoRefresh = 1'b0;//(autorefreshCounter >= 11'd1050) ? 1'b1 : 1'b0;
-	 //assign isBusy_AutoRefresh = (autorefreshCounter >= 11'd1045) ? 1'b1 : 1'b0;
+	//assign isBusy_AutoRefresh = 1'b0;//(autorefreshCounter >= 11'd1050) ? 1'b1 : 1'b0;
+	assign isBusy_AutoRefresh = (autorefreshCounter >= 11'd1050) ? 1'b1 : 1'b0;
 
 	reg [3:0] currentCommand ;//= CMD_NOP;
 	assign {max10Board_SDRAM_ChipSelect_n, max10Board_SDRAM_RowAddressStrobe_n, max10Board_SDRAM_ColumnAddressStrobe_n, max10Board_SDRAM_WriteEnable_n } = currentCommand;
@@ -84,9 +84,8 @@ module Max10_SDRam(
 	assign max10Board_SDRAM_ClockEnable = 1'b1;
 	assign max10Board_SDRAM_Clock = activeClock;
 	
-	assign outputData = max10Board_SDRAM_Data;
-	//assign outputData = outputValid ? max10Board_SDRAM_Data : 16'hZZZZ;
-	//assign outputData =  inputValid ;
+	assign outputData = outputValid ? max10Board_SDRAM_Data : 16'hZZZZ;
+
 	
 	//--------------------------------------------------------------
 	
@@ -102,7 +101,6 @@ module Max10_SDRam(
 	
 	reg [4:0] currentState ;
 	reg [16:0] pauseCycles; //clock cycles to pause in the current state
-	//reg firstClockInState = 1'b0; //Used to set the currentCommnad to something for the first clock period.  
 	//--
 	localparam INIT = 0; //Leads to next. Initializes some values.
 	localparam INIT_STARTUPWAIT = 1; //Wait phase.  Exits when enough clicks have passed.
@@ -265,12 +263,12 @@ module Max10_SDRam(
 							currentState <= WRITE_ROWACTIVATE;
 						end
 					end
-					//else if (isBusy_AutoRefresh == 1'b1 ) begin
-					// else if (autorefreshCounter >= 11'd1050 ) begin //Slight pause allows us to avoid a possible glitch
-						// currentState <= AUTOFRESH_ALL;
-						// currentCommand = CMD_CBR_AUTOREFRESH;
-						// pauseCycles = 0;
-					// end
+					else if (isBusy_AutoRefresh == 1'b1 ) begin
+					//else if (isBusy_AutoRefresh >= 11'd1050 ) begin //Slight pause allows us to avoid a possible glitch
+						currentState <= AUTOFRESH_ALL;
+						currentCommand = CMD_CBR_AUTOREFRESH;
+						pauseCycles = 17'd0;
+					end
 					//We are not asking to begin a read/write
 					else begin
 						currentCommand = CMD_NOP;
@@ -402,7 +400,7 @@ module Max10_SDRam(
 				end
 			endcase
 			
-			//	autorefreshCounter = autorefreshCounter + 1'd1;
+				autorefreshCounter = autorefreshCounter + 1'd1;
 			end
 	 end //posedge max10Board_SDRAM_Clock
 endmodule

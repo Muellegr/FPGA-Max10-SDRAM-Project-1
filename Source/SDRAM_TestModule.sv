@@ -3,6 +3,7 @@ module SDRAM_TestModule(
 	  input wire inputClock, //143Mhz
       input wire reset_n,
 	  input wire isBusy,
+	  input wire recievedCommand,
 	  
 	  input wire inputDataAvailable,
 	  input wire [15:0] inputData ,
@@ -19,7 +20,7 @@ module SDRAM_TestModule(
 	   );
 	   
 	   reg [31:0] counter ;//= 32'b0;
-	   const reg [31:0] counterMax = 32'd100; //Static value used to count up to.
+	   const reg [31:0] counterMax = 32'd33554431; //Static value used to count up to.
 	   reg [4:0] currentState = 5'b0 ;
 	   
 	   always@(posedge inputClock) begin
@@ -58,12 +59,21 @@ module SDRAM_TestModule(
 					
 					//--State 1 : Write to address. Enters not busy. Wait for busy to progress.  
 					5'd1 : begin
-						if (isBusy == 1'b1)begin //Has reacted to our input.  Next state now
+						if (recievedCommand == 1'b1)begin //Has reacted to our input.  Next state now
 							currentState = 5'd2;
 						end
 						else begin
 							outputAddress = counter[24:0]; //Fill in all 25 bits
-							outputData = 16'd256;//counter[15:0];
+							
+							// if (counter == 32'd500) begin
+								// outputData = 15'd100;
+							// end
+							// else begin
+								outputData = counter[15:0];
+							//end
+						
+						
+							//outputData = counter[15:0];
 							outputValue = {9'd0 , counter};
 							isWriting = 1'b1;
 							outputValid = 1'b1;
@@ -73,8 +83,7 @@ module SDRAM_TestModule(
 					//--State 2 : Wait for no busy to progress.
 					5'd2 : begin
 						outputValid = 1'b0; 
-						outputValue = {9'd0 , counter};
-							
+						
 						if (isBusy == 1'b0) begin
 							//If reached end of our counting, progress to reading from values.
 							if (counter >= counterMax ) begin
@@ -96,7 +105,7 @@ module SDRAM_TestModule(
 						outputValue = {9'd0 , counter};
 						isWriting = 1'b0;
 						outputValid = 1'b1;
-						if (isBusy == 1'b1)begin //Has reacted to our input.  Next state now
+						if (recievedCommand == 1'b1)begin //Has reacted to our input.  Next state now
 							currentState <= 5'd4;
 						end
 					end
@@ -107,7 +116,7 @@ module SDRAM_TestModule(
 						
 						//--Wait for the data to become available
 						if (inputDataAvailable == 1'b1) begin //Data is good to record
-							if (25'd256 != inputData ) begin
+							if (counter[15:0] != inputData ) begin
 								//If error, display what the input data was.
 								outputValue ={24'd0, inputData } ;
 								//outputValue = {9'd0 , counter};

@@ -46,8 +46,10 @@ module Project1Main(
 	reg  		[40:0]		segmentDisplayValue; //This controls what is displayed on the 6x digit displays.
 	
 	output reg [9:0] max10Board_LEDs; //The LED lights
-	assign max10Board_LEDs[7:3] = 1'b0; //Unused lights
+	assign max10Board_LEDs[5:3] = 1'b0; //Unused lights
 	assign max10Board_LEDs[9] = !reset_n;
+	assign max10Board_LEDs[7] = (sdram_TestOutputData[1] == 16'd101) ? 1'b1 : 1'b0;
+	  
 	//Light 7 is used for sdram information.
 	 
 	//--SDRAM user interface
@@ -65,16 +67,35 @@ module Project1Main(
 	//--SDRAM startup wait
 	
 	reg [24:0] sdram_testAddressCounter;
-	reg [50:0][24:0] sdram_TestAddress;
-	reg [50:0][15:0] sdram_TestInputData;
-	reg [50:0][15:0] sdram_TestOutputData;
+	reg [10:0][24:0] sdram_TestAddress;
+	reg [10:0][15:0] sdram_TestInputData;
+	reg [10:0][15:0] sdram_TestOutputData;
 	
-	reg [25:0][9:0][15:0] sdram_DataOutputState;
-	reg [8:0]		 sdram_DataOutputCounter;
+	//reg [25:0][9:0][15:0] sdram_DataOutputState;
+	//reg [8:0]		 sdram_DataOutputCounter;
 	
-	reg [15:0] sdram_inputData;
-	reg 	   sdram_isWriting ;
-	reg		   sdram_inputValid ;
+	wire [15:0] sdram_inputData;
+	
+	reg [15:0] sdram_inputDataLoading;
+	reg [24:0] sdram_inputAddressLoading;
+
+	reg [15:0] sdram_inputDataTester;
+	reg [24:0] sdram_inpuAddressTester;
+	
+	wire sdram_isWriting ;
+	reg	sdram_isWritingLoading;
+	reg sdram_isWritingTester;
+	
+
+	wire sdram_inputValid ;
+	reg sdram_inputValidLoading;
+	reg sdram_inputValidTester;
+	assign sdram_inputData = (isLoading) ? sdram_inputDataLoading : sdram_inputDataTester;
+	assign sdram_inputAddress = (isLoading) ? sdram_inputAddressLoading : sdram_inpuAddressTester;
+	assign sdram_isWriting = (isLoading) ? sdram_isWritingLoading : sdram_isWritingTester;
+	assign sdram_inputValid = (isLoading) ? sdram_inputValidLoading : sdram_inputValidTester;
+	wire [4:0] index;
+	
 	always@(posedge clock143Mhz)begin
 		max10Board_LEDs[8] = 1'b0;
 		if (reset_n == 1'b0) begin
@@ -83,16 +104,26 @@ module Project1Main(
 			isLoading = 1'b1;
 			
 			sdram_testAddressCounter = 25'd0;
-			sdram_DataOutputCounter = 9'd0;
+			//sdram_DataOutputCounter = 9'd0;
 			
-			sdram_inputData = 16'd0;
-			sdram_isWriting = 1'd0;
-			sdram_inputValid = 1'd0;
+			sdram_inputDataLoading = 16'd0;
+			sdram_isWritingLoading = 1'd0;
+			sdram_inputValidLoading = 1'd0;
+			sdram_inputAddressLoading = 25'd0;
+			
+			for (index=0; index<=10; index=index+1) begin
+			  sdram_TestAddress[index] <= 25'h00;
+			  sdram_TestInputData[index] <= 16'h00;
+			  sdram_TestOutputData[index] <= 16'h00;
+			end
+	
 		end
 		if (reset_n == 1'b1) begin
 			case(sdram_startupLoadState)
 				//Setup SDRAM.  Pause a moment for it to enter busy mode.
 				6'd0 : begin
+					isLoading = 1'b1;
+					max10Board_LEDs[6] = 1'b1;
 					if (sdram_startupLoadCounter == 8'd10) begin
 						sdram_startupLoadCounter = 8'd0;
 						sdram_startupLoadState = 6'd1;  
@@ -114,7 +145,7 @@ module Project1Main(
 				//Pause after it is no longer busy from startup.  No reason to.
 				6'd2: begin 
 					if (sdram_startupLoadCounter == 8'd10) begin
-						sdram_startupLoadState = 6'd4;
+						sdram_startupLoadState = 6'd9;
 						isLoading = 1'b0;
 					end
 					else begin
@@ -142,13 +173,13 @@ module Project1Main(
 						sdram_startupLoadState = 6'd5;
 					end
 					else begin
-						sdram_TestAddress[sdram_testAddressCounter] = sdram_testAddressCounter ;
+						sdram_TestAddress[sdram_testAddressCounter] = sdram_testAddressCounter + 25'd128 ;
 						sdram_TestInputData[sdram_testAddressCounter] =  16'd100 + sdram_testAddressCounter[15:0];//(sdram_testAddressCounter+15'd1)*15'd1000;
 						
-						sdram_inputAddress = sdram_testAddressCounter;
-						sdram_inputData =  16'd100 + sdram_testAddressCounter[15:0];
-						sdram_isWriting = 1'b1;
-						sdram_inputValid = 1'b1;
+						sdram_inputAddressLoading = sdram_testAddressCounter  + 25'd128;
+						sdram_inputDataLoading =  16'd100 + sdram_testAddressCounter[15:0];
+						sdram_isWritingLoading = 1'b1;
+						sdram_inputValidLoading = 1'b1;
 					end
 				end
 				
@@ -181,25 +212,26 @@ module Project1Main(
 						end
 					end
 					else begin
-						sdram_inputAddress = 25'd0;
+						sdram_inputAddressLoading = 25'd0;
 					//	sdram_inputData = 16'd0;
-						sdram_inputValid = 1'b0;
+						sdram_inputValidLoading = 1'b0;
 					end
 				end
 				// //-----------------------
 				// //---------PAUSE HERE
 				6'd6: begin 
-					if (sdram_testAddressCounter == 25'd20) begin
+					//if (sdram_testAddressCounter == 25'd33554431) begin
+					if (max10Board_Button0 == 1'b0) begin
 						sdram_testAddressCounter = 25'd0;
 						sdram_startupLoadState = 6'd7;  //Loading the data
-						
+						max10Board_LEDs[6]  = 1'b0;
 						// if (dataLineStoreCounter < 60) begin
 							// dataLineStore[dataLineStoreCounter] =    sdram_inputValid + dataLineStoreCounter * 1000;
 							// dataLineStoreCounter = dataLineStoreCounter + 1;
 						// end
 					end
 					else begin
-						sdram_testAddressCounter = sdram_testAddressCounter + 1;
+						sdram_testAddressCounter = sdram_testAddressCounter + 1'b1;
 					end
 				end
 				// //------------------------
@@ -225,10 +257,10 @@ module Project1Main(
 					end
 					else begin
 						
-						sdram_inputAddress = sdram_TestAddress[sdram_testAddressCounter];
+						sdram_inputAddressLoading = sdram_TestAddress[sdram_testAddressCounter];
 						//sdram_TestOutputData[sdram_testAddressCounter] = sdram_outputData;//16'd5;
-						sdram_isWriting = 1'b0;
-						sdram_inputValid <= 1'b1;
+						sdram_isWritingLoading = 1'b0;
+						sdram_inputValidLoading <= 1'b1;
 						// if (dataLineStoreCounter < 60) begin
 							// //dataLineStore[dataLineStoreCounter] = sdram_outputData + dataLineStoreCounter * 1000;
 							// dataLineStore[dataLineStoreCounter] =  sdram_inputValid + dataLineStoreCounter * 1000;
@@ -254,7 +286,7 @@ module Project1Main(
 						// sdram_DataOutputCounter = sdram_DataOutputCounter + 1'd1;
 					// end
 					
-					sdram_inputValid <= 1'b0;
+					sdram_inputValidLoading <= 1'b0;
 					if (sdram_outputValid == 1'b1) begin //Data is good to record
 							sdram_TestOutputData[sdram_testAddressCounter] = sdram_outputData;// + 1 ;
 					end
@@ -276,10 +308,13 @@ module Project1Main(
 				// //--Final state.  
 				6'd9: begin 
 					//Uses switches and key0 to compare input//output
-					
+					/*
 					if (max10board_switches[0] == 1'b1 ) begin
 						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[0]; end
-						else begin segmentDisplayValue = sdram_TestOutputData[0]; end
+						else begin 
+							segmentDisplayValue = 40'd0;
+							segmentDisplayValue = sdram_TestOutputData[0] + 1; 
+						end
 					end
 					else if (max10board_switches[1] == 1'b1 ) begin
 						if (max10Board_Button0 == 1'b1 ) begin  segmentDisplayValue = sdram_TestInputData[1]; end
@@ -327,7 +362,7 @@ module Project1Main(
 					else begin
 						segmentDisplayValue = 41'd191919;
 					end;
-					
+					*/
 				end
 				
 				
@@ -437,22 +472,24 @@ module Project1Main(
 	
 	
 	
-	/*
+	
 	//--A test module that incrmeents through all of this.
 	SDRAM_TestModule sdRamTest (
 		.inputClock(clock143Mhz), //Clock
 		.reset_n(reset_n_testModule), //Reset, active low
 		.isBusy(sdram_isBusy), //Is the SDRAm saying it's busy
-		.isWriting(sdram_isWriting), //If we say output is valid, is it writing
-		.outputValid(sdram_inputValid), //Should we try a new command
-		.outputAddress(sdram_inputAddress), //Address this writes data to
-		.outputData(sdram_inputData), //Data to write
+		.recievedCommand(sdram_recievedCommand),
+		
+		.isWriting(sdram_isWritingTester), //If we say output is valid, is it writing
+		.outputValid(sdram_inputValidTester), //Should we try a new command
+		.outputAddress(sdram_inpuAddressTester), //Address this writes data to
+		.outputData(sdram_inputDataTester), //Data to write
 		.inputDataAvailable(sdram_outputValid), //High when data from reading is available
 		.inputData(sdram_outputData), // Data from reading
 		.compareError(sdRamTest_CompareError), //If we arrived at an error
 		.completedSuccess(sdRamTest_CompletedSuccess), //If we were successful
 		.outputValue( segmentDisplayValue) //Current increment, updated every 0.25 seconds
-	);*/
+	);
 	
 	//--The main SDRAM controller.  The interface is how it is controlled.  
 	//wire [15:0] debugOutputData ;
