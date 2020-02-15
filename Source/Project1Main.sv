@@ -90,7 +90,7 @@ module Project1Main(
 	wire sdram_inputValid ;
 	reg sdram_inputValidLoading;
 	reg sdram_inputValidTester;
-	assign sdram_inputData = (isLoading) ? sdram_inputDataLoading : sdram_inputDataTester;
+	//assign sdram_inputData = (isLoading) ? sdram_inputDataLoading : sdram_inputDataTester;
 	assign sdram_inputAddress = (isLoading) ? sdram_inputAddressLoading : sdram_inpuAddressTester;
 	assign sdram_isWriting = (isLoading) ? sdram_isWritingLoading : sdram_isWritingTester;
 	assign sdram_inputValid = (isLoading) ? sdram_inputValidLoading : sdram_inputValidTester;
@@ -507,6 +507,7 @@ module Project1Main(
 		.max10Board_SDRAM_ColumnAddressStrobe_n(max10Board_SDRAM_ColumnAddressStrobe_n),
 		.max10Board_SDRAM_RowAddressStrobe_n(max10Board_SDRAM_RowAddressStrobe_n),
 		
+		
 		//--Interface 
 		.activeClock(clock143Mhz),
 		.address(sdram_inputAddress),
@@ -541,3 +542,4 @@ module Project1Main(
 	);
 	
 endmodule
+//

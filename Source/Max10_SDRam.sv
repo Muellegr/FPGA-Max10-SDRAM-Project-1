@@ -1,7 +1,4 @@
-/*		
-		Test a double write // read?
-		
-	  */
+
 module Max10_SDRam(
 	//--Hardware interface
 	output wire max10Board_SDRAM_Clock, //143Mhz
